@@ -1,12 +1,10 @@
 const express = require("express")
 require("dotenv").config()
 const mongoose = require('mongoose');
-const app = express()
-
-
-
 const URL = process.env.MONGO_URL
 const Port = process.env.PORT
+
+const app = express()
 mongoose.connect(URL)
     .then(() => {
 
