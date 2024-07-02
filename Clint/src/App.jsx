@@ -8,8 +8,6 @@ import SignUp from './pages/Signup'
 import Header from "./Components/Header"
 // import Header from './components/Header'
 function App() {
-
-
   return (
     <Router >
       <Header />
