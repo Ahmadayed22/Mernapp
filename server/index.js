@@ -5,8 +5,9 @@ const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
 const URL = process.env.MONGO_URL
 const Port = process.env.PORT
-
+const cors = require("cors")
 const app = express()
+app.use(cors())
 app.use(express.json())
 app.use("/api/user", (UserRouter));
 app.use("/api/user",AuthRouter)
