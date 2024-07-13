@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
+import Gauth from "../Components/Gauth";
 
 const Signup = () => {
     const Navigate = useNavigate();
@@ -16,7 +17,7 @@ const Signup = () => {
         try {
             SetIsLoading(true)
             SetError(null)
-            const res = await fetch("http://localhost:3000/api/user/signup", {
+            const res = await fetch("http://localhost:3000/api/auth/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -77,6 +78,7 @@ const Signup = () => {
                         ) : (
                             'Sign Up'
                         )}</Button>
+                        <Gauth />
                     </form>
                     <div className="flex gap-5 my-2 text-sm">
                         <span className="">Have an account?</span>

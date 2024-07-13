@@ -10,7 +10,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use("/api/user", (UserRouter));
-app.use("/api/user",AuthRouter)
+app.use("/api/auth",AuthRouter)
 
 
 mongoose.connect(URL)

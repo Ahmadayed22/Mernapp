@@ -3,6 +3,7 @@ import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from '../store/auth';
+import Gauth from "../Components/Gauth";
 
 const SignIn = () => {
     const dispatch = useDispatch();
@@ -14,13 +15,13 @@ const SignIn = () => {
     const handleForm = (e) => {
         setInputForm({ ...inputForm, [e.target.id]: e.target.value });
     };
-    console.log(useSelector((state) => state.auth))
+    // console.log(useSelector((state) => state.auth))
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             dispatch(authActions.SignInStart());
-            const response = await fetch("http://localhost:3000/api/user/signin", {
+            const response = await fetch("http://localhost:3000/api/auth/signin", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -71,6 +72,7 @@ const SignIn = () => {
                                 'Sign In'
                             )}
                         </Button>
+                        <Gauth />
                     </form>
                     <div className="flex gap-5 my-2 text-sm">
                         <span>Have an account?</span>
