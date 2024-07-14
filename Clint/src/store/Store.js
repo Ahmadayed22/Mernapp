@@ -3,7 +3,8 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import persistStore from "redux-persist/es/persistStore";
 import storage from 'redux-persist/lib/storage';
-
+import themeReducer from "./themeSlice"
+import authReducer from "./auth";
 // const rootReducer = combineReducers({
 //     auth: authReducer,
 // });
@@ -27,10 +28,10 @@ import storage from 'redux-persist/lib/storage';
 
 
 //way one without redux persist
-import authReducer from "./auth";
 
 const rootReducer = combineReducers({
-    auth: authReducer,
+  auth: authReducer,
+  theme:themeReducer,
 });
 
 const persistConfig = {
