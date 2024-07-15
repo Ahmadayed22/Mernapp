@@ -7,7 +7,6 @@ import Gauth from "../Components/Gauth";
 
 const SignIn = () => {
     const dispatch = useDispatch();
-
     const { loading, error } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const [inputForm, setInputForm] = useState({});
