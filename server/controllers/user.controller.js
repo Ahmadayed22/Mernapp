@@ -30,7 +30,7 @@ const updateUser = async (req, res) => {
         
         res.status(400).json({error:"Failed to Update"})
         }
-    console.log(req.user.userId)
+   
    
 }
 module.exports ={updateUser,};
