@@ -9,7 +9,6 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-
         SignInStart: (state) => {
             state.loading = true;
             state.error = null;
@@ -43,7 +42,20 @@ const authSlice = createSlice({
         updateFailure: (state, action) => {
             state.loading = false;
             state.error = action.payload
-        }
+        },
+        DeleteUserStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        DeleteUserSuccess: (state) => {
+            state.userInfo = null
+            state.loading = false;
+            state.error = null;
+        },
+        DeleteUserFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        },
     }
 })
 export const authActions = authSlice.actions;

@@ -12,9 +12,10 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { authActions } from '../store/auth';
 import { useDispatch } from 'react-redux';
+import ModalComponent from './ModalComponent';
 
 export default function DashProfile() {
-    const { userInfo } = useSelector((state) => state.auth);
+    const { userInfo, error } = useSelector((state) => state.auth);
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -23,6 +24,7 @@ export default function DashProfile() {
     const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
     const [updateUserError, setUpdateUserError] = useState(null);
     const [formData, setFormData] = useState({});
+    const [ShowModal, SetShowModal] = useState(false)
     const filePickerRef = useRef();
     const dispatch = useDispatch();
     const handleImageChange = (e) => {
@@ -37,7 +39,7 @@ export default function DashProfile() {
             uploadImage();
         }
     }, [imageFile]);
-
+    //Upload Image dose not work
     const uploadImage = async () => {
         // service firebase.storage {
         //   match /b/{bucket}/o {
@@ -65,7 +67,7 @@ export default function DashProfile() {
             },
             (error) => {
                 setImageFileUploadError(
-                    'Could not upload image (File must be less than 2MB)'
+                    'Could not upload image (File must be less than 2MB)', error
                 );
                 setImageFileUploadProgress(null);
                 setImageFile(null);
@@ -121,6 +123,31 @@ export default function DashProfile() {
             setUpdateUserError(error.message);
         }
     };
+
+    const HandelDeleteUser = async () => {
+        SetShowModal(false)
+        try {
+            dispatch(authActions.DeleteUserStart())
+            const response = await fetch(`http://localhost:3000/api/user/delete/:${userInfo._id}`, {
+                method: "DELETE",
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const data = await response.json()
+            if (!response.ok) {
+                dispatch(authActions.DeleteUserFailure(data.error))
+            }
+            else {
+                dispatch(authActions.DeleteUserSuccess(data))
+                console.log(data)
+            }
+        } catch (error) {
+            console.log(error.message, error)
+            dispatch(authActions.DeleteUserFailure(error))
+        }
+    }
     return (
         <div className='max-w-lg mx-auto p-3 w-full'>
             <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
@@ -193,7 +220,7 @@ export default function DashProfile() {
                 </Button>
             </form>
             <div className='text-red-500 flex justify-between mt-5'>
-                <span className='cursor-pointer'>Delete Account</span>
+                <span onClick={() => SetShowModal(true)} className='cursor-pointer'>Delete Account</span>
                 <span className='cursor-pointer'>Sign Out</span>
             </div>
             {updateUserSuccess && (
@@ -206,6 +233,13 @@ export default function DashProfile() {
                     {updateUserError}
                 </Alert>
             )}
+            {error && (
+                <Alert color='failure' className='mt-5'>
+                    {error}
+                </Alert>
+            )}
+            <ModalComponent SetShowModal={SetShowModal} ShowModal={ShowModal} HandelDeleteUser={HandelDeleteUser} />
         </div>
     );
+
 }

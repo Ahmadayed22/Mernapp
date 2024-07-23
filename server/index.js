@@ -3,14 +3,17 @@ require("dotenv").config()
 const mongoose = require('mongoose');
 const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 const URL = process.env.MONGO_URL
 const Port = process.env.PORT
 const cors = require("cors")
 const app = express()
-app.use(cors())
-app.use(express.json())
+app.use(cors({
+    origin: 'http://localhost:5173', // Frontend origin
+    credentials: true // Enable cookies and other credentials in CORS
+}));
 app.use(cookieParser())
+app.use(express.json())
 app.use("/api/auth",AuthRouter)
 app.use("/api/user", (UserRouter));
 

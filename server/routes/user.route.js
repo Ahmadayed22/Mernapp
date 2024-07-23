@@ -10,6 +10,6 @@ router.get("/test", (req, res) => {
 
 router.put('/update/:id',  updateUser);
 
-router.delete("/delete/:id", verifyToken,deleteUser)
+router.delete("/delete/:id",deleteUser)
 
 module.exports = router;

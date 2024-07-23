@@ -18,19 +18,19 @@ const SignUp = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     try {
-        const user = await User.signIn(email, password)
+        const user = await User.signIn(email, password);
         const { password: pass, ...rest } = user._doc; // separate password from information
-        const token = createToken(user._id)
-        // res.status(200).json({rest,token})
+        const token = createToken(user._id);
         res.status(200).cookie("access_token", token, {
             httpOnly: true,
-        }).json(rest)
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        }).json(rest);
     } catch (err) {
-           res.status(400).json({error : err.message})
+        res.status(400).json({ error: err.message });
     }
-}
+};
 
 const google = async (req, res) => {
     const { name, email, googlePhotoUrl } = req.body;
