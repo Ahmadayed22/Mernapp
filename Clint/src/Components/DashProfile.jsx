@@ -13,7 +13,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { authActions } from '../store/auth';
 import { useDispatch } from 'react-redux';
 import ModalComponent from './ModalComponent';
-
+// import { useNavigate } from "react-router-dom";
 export default function DashProfile() {
     const { userInfo, error } = useSelector((state) => state.auth);
     const [imageFile, setImageFile] = useState(null);
@@ -27,6 +27,7 @@ export default function DashProfile() {
     const [ShowModal, SetShowModal] = useState(false)
     const filePickerRef = useRef();
     const dispatch = useDispatch();
+    // const navigate = useNavigate()
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -148,6 +149,27 @@ export default function DashProfile() {
             dispatch(authActions.DeleteUserFailure(error))
         }
     }
+    //or you can use utlis
+    const HandelSignOut = async () => {
+        dispatch(authActions.SignOutStart())
+        try {
+            const res = await fetch("http://localhost:3000/api/user/signout", {
+                method: "POST",
+            })
+            const data = await res.json()
+            if (!res.ok) {
+                dispatch(authActions.SignOutFailure(data.error))
+                console.log(data.error)
+            }
+            else {
+                dispatch(authActions.SignOutSuccess())
+
+            }
+        } catch (error) {
+            dispatch(authActions.SignOutFailure(error))
+            console.log(error)
+        }
+    }
     return (
         <div className='max-w-lg mx-auto p-3 w-full'>
             <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
@@ -221,7 +243,7 @@ export default function DashProfile() {
             </form>
             <div className='text-red-500 flex justify-between mt-5'>
                 <span onClick={() => SetShowModal(true)} className='cursor-pointer'>Delete Account</span>
-                <span className='cursor-pointer'>Sign Out</span>
+                <span onClick={HandelSignOut} className='cursor-pointer'>Sign Out</span>
             </div>
             {updateUserSuccess && (
                 <Alert color='success' className='mt-5'>

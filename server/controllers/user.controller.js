@@ -50,8 +50,17 @@ const deleteUser = async (req, res) => {
         const user = await User.findByIdAndDelete({_id:userId});
         return res.status(200).json("User has been deleted");
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         return res.status(500).json({ error: "Failed to delete the account" });
     }
 };
-module.exports ={updateUser,deleteUser};
+
+const signOut = (req, res) => {
+   try {
+     res.clearCookie('access_token').status(200).json('User has been signed out')
+   } catch (error) {
+    res.status(401).json({error: "Failed to SingOut"})
+    }
+    
+}
+module.exports ={updateUser,deleteUser,signOut};

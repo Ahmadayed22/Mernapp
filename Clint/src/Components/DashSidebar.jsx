@@ -3,8 +3,12 @@ import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { Sidebar } from "flowbite-react";
 import { HiTable, HiUser, } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { HandelSignOut } from "../utlis/authUtlis";
 const DashSidebar = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const location = useLocation()
     const [tab, setTab] = useState("")
     useEffect(() => {
@@ -16,7 +20,9 @@ const DashSidebar = () => {
         }
     }, [location.search])
 
-
+    const SingOut = () => {
+        HandelSignOut(dispatch, navigate)
+    }
 
     return (
         <Sidebar className="w-full md:w-56">
@@ -28,7 +34,7 @@ const DashSidebar = () => {
                         </Sidebar.Item>
                     </Link>
 
-                    <Sidebar.Item icon={HiTable} className="cursor-pointer">
+                    <Sidebar.Item onClick={SingOut} icon={HiTable} className="cursor-pointer">
                         Sign Out
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>

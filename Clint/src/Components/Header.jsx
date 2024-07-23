@@ -1,16 +1,23 @@
 import { Avatar, Button, Dropdown, DropdownDivider, Navbar, TextInput } from 'flowbite-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 // import { authActions } from '../store/auth';
 import { themeAction } from '../store/themeSlice';
+import { HandelSignOut } from '../utlis/authUtlis';
+
 export default function Header() {
+    const navigate = useNavigate()
     const path = useLocation().pathname;
     const { userInfo } = useSelector((state) => state.auth)
     const { theme } = useSelector((state) => state.theme)
     const dispatch = useDispatch()
     // console.log(userInfo)
+
+    const SingOut = () => {
+        HandelSignOut(dispatch, navigate)
+    }
     return (
         <Navbar className='border-b-2 '>
             <Link
@@ -52,7 +59,7 @@ export default function Header() {
                                 <Dropdown.Item>Profile</Dropdown.Item>
                             </Link>
                             <DropdownDivider />
-                            <Dropdown.Item >Sign out</Dropdown.Item>
+                            <Dropdown.Item onClick={SingOut}>Sign out</Dropdown.Item>
                         </Dropdown>
                     )
                         : (

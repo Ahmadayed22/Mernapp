@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateUser,deleteUser } = require("../controllers/user.controller");
+const { updateUser,deleteUser,signOut } = require("../controllers/user.controller");
 const verifyToken = require("../utils/verfiyUser");
 
 const router = express.Router();
@@ -10,6 +10,8 @@ router.get("/test", (req, res) => {
 
 router.put('/update/:id',  updateUser);
 
-router.delete("/delete/:id",deleteUser)
+router.delete("/delete/:id", deleteUser)
+
+router.post("/signout",signOut)
 
 module.exports = router;

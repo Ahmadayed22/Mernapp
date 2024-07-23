@@ -56,6 +56,20 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload
         },
+        SignOutStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        SignOutSuccess: (state) => {
+            state.userInfo = null
+            state.loading = false;
+            state.error = null;
+        },
+        SignOutFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+        },
+
     }
 })
 export const authActions = authSlice.actions;
