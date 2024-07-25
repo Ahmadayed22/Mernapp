@@ -13,9 +13,10 @@ import 'react-circular-progressbar/dist/styles.css';
 import { authActions } from '../store/auth';
 import { useDispatch } from 'react-redux';
 import ModalComponent from './ModalComponent';
+import { Link } from 'react-router-dom';
 // import { useNavigate } from "react-router-dom";
 export default function DashProfile() {
-    const { userInfo, error } = useSelector((state) => state.auth);
+    const { userInfo, error, loading } = useSelector((state) => state.auth);
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -237,9 +238,16 @@ export default function DashProfile() {
                     placeholder='password'
                     onChange={handleChange}
                 />
-                <Button type='submit' gradientDuoTone='purpleToBlue' outline>
-                    Update
+                <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={loading}>
+                    {loading ? "Loading" : "Update"}
                 </Button>
+                {userInfo.IsAdmin && (
+                    <Link to={"/create-post"}>
+                        <Button type='button' gradientMonochrome="cyan" outline className='w-full' >
+                            Create Post
+                        </Button>
+                    </Link>
+                )}
             </form>
             <div className='text-red-500 flex justify-between mt-5'>
                 <span onClick={() => SetShowModal(true)} className='cursor-pointer'>Delete Account</span>
