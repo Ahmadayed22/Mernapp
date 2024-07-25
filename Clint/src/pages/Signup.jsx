@@ -23,6 +23,7 @@ const Signup = () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(Form),
+                credentials: "include",
             })
             const data = await res.json()
             if (!res.ok) {

@@ -2,8 +2,8 @@ const User = require("../models/user.model")
 const bcryptjs = require('bcryptjs');
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
-const createToken = (id) => {
-   return jwt.sign({ userId: id }, process.env.SECRET, { expiresIn: "3d" })
+const createToken = (user) => {
+   return jwt.sign({ userId: user._id,IsAdmin:user.IsAdmin }, process.env.SECRET, { expiresIn: "3d" })
     
 }
 const SignUp = async (req, res) => {
@@ -22,7 +22,8 @@ const login = async (req, res) => {
     try {
         const user = await User.signIn(email, password);
         const { password: pass, ...rest } = user._doc; // separate password from information
-        const token = createToken(user._id);
+        const token = createToken(user);
+        console.log("Generated Token:", token); // Add this line
         res.status(200).cookie("access_token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
@@ -38,7 +39,7 @@ const google = async (req, res) => {
     try {
         const user = await User.findOne({email})
         if (user) {
-        const token = createToken(user._id);
+        const token = createToken(user);
          const { password: pass, ...rest } = user._doc; // separate password from information
         res.status(200).cookie("access_token", token, {
             httpOnly:true,
@@ -59,7 +60,7 @@ const google = async (req, res) => {
       });
       await newUser.save();
       const token = jwt.sign(
-        { id: newUser._id, isAdmin: newUser.isAdmin },
+        { id: newUser._id, isAdmin: newUser.IsAdmin },
         process.env.JWT_SECRET
       );
       const { password, ...rest } = newUser._doc;

@@ -8,9 +8,9 @@ router.get("/test", (req, res) => {
     res.send("Test route");
 });
 
-router.put('/update/:id',  updateUser);
+router.put('/update/:id', verifyToken, updateUser);
 
-router.delete("/delete/:id", deleteUser)
+router.delete("/delete/:id", verifyToken,deleteUser)
 
 router.post("/signout",signOut)
 
