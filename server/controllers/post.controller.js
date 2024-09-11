@@ -1,7 +1,7 @@
 const Post = require("../models/post.model")
 
 const create =async (req, res) => {
-    // console.log(req.user)
+    console.log(req.user)
     if (!req.user.IsAdmin) {
         res.status(401).json({error: "You are Not the admin"})
     }
