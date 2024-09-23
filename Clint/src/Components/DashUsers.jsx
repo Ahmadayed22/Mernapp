@@ -9,7 +9,7 @@ const DashUsers = () => {
     const [users, setusers] = useState([]);
     const [ShowMore, SetShowMore] = useState(true);
     const [showModal, SetShowModal] = useState(false);
-    // const [userIdToDelete, setuserIdToDelete] = useState('');
+    const [userIdToDelete, setuserIdToDelete] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -60,6 +60,27 @@ const DashUsers = () => {
         }
     }
 
+    const HandelDelteUser = async () => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/user/delete/${userIdToDelete}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.error)
+            }
+            if (res.ok) {
+                setusers((prev) => prev.filter((user) => user._id != userIdToDelete))
+                SetShowModal(false)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     return (
@@ -96,7 +117,7 @@ const DashUsers = () => {
                                     <Table.Cell>
                                         <span onClick={() => {
                                             SetShowModal(true);
-                                            // setuserIdToDelete(user._id)
+                                            setuserIdToDelete(user._id)
 
                                         }}
                                             className='font-medium text-red-500 hover:underline cursor-pointer'>
@@ -124,7 +145,7 @@ const DashUsers = () => {
                             Are you sure you want to delete Your user?
                         </h3>
                         <div className="flex justify-center gap-4">
-                            <Button color="failure" >
+                            <Button color="failure" onClick={HandelDelteUser} >
                                 {"Yes, I'm sure"}
                             </Button>
                             <Button color="gray" onClick={() => SetShowModal(false)}>
