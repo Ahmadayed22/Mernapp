@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { Sidebar } from "flowbite-react";
-import { HiDocumentText, HiTable, HiUser, } from "react-icons/hi";
+import { HiDocumentText, HiOutlineUserGroup, HiTable, HiUser, } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { HandelSignOut } from "../utlis/authUtlis";
@@ -40,9 +40,22 @@ const DashSidebar = () => {
                         <Link to={'/dashboard?tab=posts'}>
                             <Sidebar.Item
                                 active={tab === 'posts'}
-                                icon={HiDocumentText}
+                                icon={HiOutlineUserGroup}
                                 as='div'>
                                 posts
+                            </Sidebar.Item>
+
+                        </Link>
+                    )}
+
+                    {userInfo.IsAdmin && (
+
+                        <Link to={'/dashboard?tab=users'}>
+                            <Sidebar.Item
+                                active={tab === 'users'}
+                                icon={HiDocumentText}
+                                as='div'>
+                                users
                             </Sidebar.Item>
 
                         </Link>
