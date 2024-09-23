@@ -63,4 +63,34 @@ const signOut = (req, res) => {
     }
     
 }
-module.exports ={updateUser,deleteUser,signOut};
+
+const getusers = async (req,res) => {
+    if (!req.user.IsAdmin) {
+        return res.status(401).json({ error: "You are not authorized to get users" });
+    }
+    try {
+        const startIndex = parseInt(req.query.startIndex , 10) || 0
+        const limit = parseInt(req.query.limit, 10) || 9
+        const sortDirection = req.query.sort === 'asc' ? 1 : -1;
+        const users = await User.find({}).skip(startIndex).limit(limit).sort({ createdAt: sortDirection });
+        const totalUsers = await User.countDocuments();
+        const userWithoutPassword = users.map((user) => {
+            const { password, ...rest } = user._doc;
+            return rest;
+        });
+        const now = new Date();
+        const oneMonthAgo = new Date(
+            now.getFullYear(),
+            now.getMonth() - 1,
+            now.getDate()
+        );
+        const lastMonthUsers = await User.countDocuments({
+            createdAt:{$gte:oneMonthAgo}
+        })
+        res.status(200).json({users:userWithoutPassword,totalUsers,lastMonthUsers});
+    } catch (err) {
+        res.status(500).json({error: `Failed to get users ${err}`})
+    }
+
+}
+module.exports ={updateUser,deleteUser,signOut,getusers};

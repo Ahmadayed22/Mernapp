@@ -12,7 +12,7 @@ const DashSidebar = () => {
     const location = useLocation()
     const [tab, setTab] = useState("")
     const { userInfo } = useSelector((state) => state.auth);
-    console.log(userInfo.IsAdmin)
+    // console.log(userInfo.IsAdmin)
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search)
         const tabFormUrl = urlParams.get("tab")

@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateUser,deleteUser,signOut } = require("../controllers/user.controller");
+const { updateUser,deleteUser,signOut,getusers } = require("../controllers/user.controller");
 const verifyToken = require("../utils/verfiyUser");
 
 const router = express.Router();
@@ -14,4 +14,5 @@ router.delete("/delete/:id", verifyToken,deleteUser)
 
 router.post("/signout",signOut)
 
+router.get('/getusers',verifyToken,getusers)
 module.exports = router;
