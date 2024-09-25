@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
 const PostRouter = require("./routes/Post.route")
+const CommentRouter = require("./routes/comment.route")
 const cookieParser = require("cookie-parser");
 const URL = process.env.MONGO_URL
 const Port = process.env.PORT
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use("/api/auth",AuthRouter)
 app.use("/api/user", (UserRouter));
 app.use("/api/post",PostRouter)
+app.use("/api/comment",CommentRouter)
 
 mongoose.connect(URL)
     .then(() => {

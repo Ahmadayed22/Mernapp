@@ -80,9 +80,9 @@ const deletepost = async (req, res) => {
 const updatepost =async (req, res) => {
     const { postId } = req.params;
     const { title, content, category } = req.body;
-    //     if (!req.user.IsAdmin) {
-    //     return res.status(401).json({ error: "You are not authorized to update this post" });
-    // }
+        if (!req.user.IsAdmin) {
+        return res.status(401).json({ error: "You are not authorized to update this post" });
+    }
     try {
         
         const updateFiels = { title, content, category };
