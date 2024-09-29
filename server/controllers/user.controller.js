@@ -93,4 +93,20 @@ const getusers = async (req,res) => {
     }
 
 }
-module.exports ={updateUser,deleteUser,signOut,getusers};
+
+const getUser = async (req, res) => {
+    // console.log(req.params.userId)
+    // const {userid} = req.params.userId
+    try {
+        const user = await User.findById(req.params.userId)
+        // console.log(user)
+        if (!user) {
+        return res.status(500).json(`User Not Found`)
+        }
+        const { password, ...rest } = user._doc;
+          res.status(200).json(rest);
+    } catch (err) {
+        res.status(500).json({error: `Failed to get user ${err}`})
+    }
+}
+module.exports ={updateUser,deleteUser,signOut,getusers,getUser};

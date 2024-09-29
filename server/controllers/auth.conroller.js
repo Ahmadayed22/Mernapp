@@ -23,11 +23,13 @@ const login = async (req, res) => {
         const user = await User.signIn(email, password);
         const { password: pass, ...rest } = user._doc; // separate password from information
         const token = createToken(user);
-        console.log("Generated Token:", token); // Add this line
+        // console.log("Generated Token:", token);
         res.status(200).cookie("access_token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
         }).json(rest);
+
+
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -64,12 +66,9 @@ const google = async (req, res) => {
         process.env.JWT_SECRET
       );
       const { password, ...rest } = newUser._doc;
-      res
-        .status(200)
-        .cookie('access_token', token, {
+      res.status(200).cookie('access_token', token, {
           httpOnly: true,
-        })
-        .json(rest);
+        }).json(rest);
         }
      
     }

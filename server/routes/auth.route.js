@@ -1,5 +1,6 @@
 const express = require("express");
 const {login,google,SignUp} = require("../controllers/auth.conroller");
+const verifyToken = require("../utils/verfiyUser");
 
 const router = express.Router();
 

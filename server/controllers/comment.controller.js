@@ -21,4 +21,15 @@ const createComment = async (req, res) => {
     }
 } 
 
-module.exports = {createComment}
+const getPostComment = async (req, res) => {
+    const { PostId } = req.params.postId
+    // console.log(id)
+    try {
+        const getComment = await Comment.find({PostId}).sort({createdAt:-1})
+        res.status(200).json(getComment)
+    } catch (error) {
+        res.status(403).json({error:`fetch comment error : ${err}`})
+    }
+}
+
+module.exports = {createComment,getPostComment}
