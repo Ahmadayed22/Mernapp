@@ -3,8 +3,8 @@ const Comment = require("../models/comment.model");
 const createComment = async (req, res) => {
     try {
         const { content, postId, userId } = req.body;
-        console.log(userId)
-        console.log( req.user.id)
+        // console.log(userId)
+        // console.log( req.user.userId)
         if (userId !== req.user.userId) {
             res.status(403).json('You are not allowed to create this comment')
         }
@@ -32,4 +32,27 @@ const getPostComment = async (req, res) => {
     }
 }
 
-module.exports = {createComment,getPostComment}
+const likeComment = async (req, res) => {
+   
+    try {
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) {
+      return res.status(403).json(`Comment not found`)
+        }
+       
+        const userIndex = comment.likes.indexOf(req.user.userId);
+        // console.log(userIndex)
+    if (userIndex === -1) {
+      comment.numberOfLikes += 1;
+      comment.likes.push(req.user.userId);
+    } else {
+      comment.numberOfLikes -= 1;
+      comment.likes.splice(userIndex, 1);
+    }
+    await comment.save();
+    res.status(200).json(comment);
+  } catch (err) {
+    res.status(403).json({error:`Like comment error : ${err}`})
+  }
+}
+module.exports = {createComment,getPostComment,likeComment}

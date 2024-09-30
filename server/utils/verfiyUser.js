@@ -12,8 +12,9 @@ const verifyToken = (req, res, next) => {
     if (err) {
         console.error("Token verification error:", err); // Log the error
         return res.status(401).json({ error: "Unauthorized or Invalid Token", details: err.message });
-    }
+        }
         req.user = user;
+        // console.log(req.user)
        
     next();
 });

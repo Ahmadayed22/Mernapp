@@ -1,9 +1,13 @@
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import PropTypes from "prop-types"
-const Comment = ({ comment }) => {
+import { FaThumbsUp } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+const Comment = ({ comment, onLike }) => {
     const [user, setUser] = useState({});
-    console.log(user);
+    const { userInfo } = useSelector((state) => state.auth);
+    console.log(comment.likes.includes(userInfo._id))
+    // console.log(userInfo._id);
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -35,12 +39,49 @@ const Comment = ({ comment }) => {
                     <span className='text-gray-500 text-xs'>{moment(comment.createdAt).fromNow()}</span>
                 </div>
                 <p className='text-gray-500 pb-2'>{comment.content}</p>
+                <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
+                    <button
+                        type='button'
+                        onClick={() => onLike(comment._id)}
+                        className={`text-gray-400 hover:text-blue-500 ${userInfo &&
+                            comment.likes.includes(userInfo._id) &&
+                            '!text-blue-500'}`}>
+                        <FaThumbsUp className='text-sm' />
+                    </button>
+                    <p className='text-gray-400'>
+                        {comment.numberOfLikes > 0 &&
+                            comment.numberOfLikes +
+                            ' ' +
+                            (comment.numberOfLikes === 1 ? 'like' : 'likes')}
+                    </p>
+                    {/*
+                    {currentUser &&
+                        (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                            <>
+                                <button
+                                    type='button'
+                                    onClick={handleEdit}
+                                    className='text-gray-400 hover:text-blue-500'
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={() => onDelete(comment._id)}
+                                    className='text-gray-400 hover:text-red-500'
+                                >
+                                    Delete
+                                </button>
+                            </>
+                        )} */}
+                </div>
             </div>
         </div>
     );
 }
 Comment.propTypes = {
     comment: PropTypes.string.isRequired,
+    onLike: PropTypes.func.isRequired,
 }
 
 export default Comment;
