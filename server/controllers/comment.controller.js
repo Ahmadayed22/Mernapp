@@ -55,4 +55,37 @@ const likeComment = async (req, res) => {
     res.status(403).json({error:`Like comment error : ${err}`})
   }
 }
-module.exports = {createComment,getPostComment,likeComment}
+
+const editComment = async (req, res) => {
+   
+    try {
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) {
+      return res.status(403).json(`Comment not found`)
+        }
+        if (comment.userId !== req.user.userId && !req.user.IsAdmin) {
+             return res.status(403).json(`You are not allowed to delete this comment`)
+       }
+        const editComment = await Comment.findByIdAndUpdate(
+            req.params.commentId,
+            {
+                content:req.body.content
+            }
+            , { new: true })
+    
+
+    
+    res.status(200).json(editComment);
+  } catch (err) {
+    res.status(403).json({error:`Like comment error : ${err}`})
+  }
+}
+
+const deleteComment = async (req, res) => {
+    try {
+        const deleteComment = await Comment.findByIdAndDelete()
+    } catch (error) {
+        res.status(403).json({error:`delete comment error : ${err}`})
+    }
+}
+module.exports = {createComment,getPostComment,likeComment,deleteComment,editComment}
