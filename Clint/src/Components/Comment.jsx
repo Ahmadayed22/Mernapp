@@ -4,12 +4,12 @@ import PropTypes from "prop-types"
 import { FaThumbsUp } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const [user, setUser] = useState({});
     const { userInfo } = useSelector((state) => state.auth);
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(comment.content);
-    console.log(comment.likes.includes(userInfo._id))
+    // console.log(comment.likes.includes(userInfo._id))
     // console.log(userInfo._id);
     useEffect(() => {
         const getUser = async () => {
@@ -20,7 +20,7 @@ const Comment = ({ comment, onLike, onEdit }) => {
                     setUser(data);
                 }
             } catch (error) {
-                console.log(error.message);
+                console.log(error);
             }
         };
         getUser();
@@ -47,7 +47,7 @@ const Comment = ({ comment, onLike, onEdit }) => {
                 onEdit(comment, editedContent);
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     };
     return (
@@ -122,13 +122,13 @@ const Comment = ({ comment, onLike, onEdit }) => {
                                         >
                                             Edit
                                         </button>
-                                        {/* <button
-                                    type='button'
-                                    onClick={() => onDelete(comment._id)}
-                                    className='text-gray-400 hover:text-red-500'
-                                >
-                                    Delete
-                                </button> */}
+                                        <button
+                                            type='button'
+                                            onClick={() => onDelete(comment._id)}
+                                            className='text-gray-400 hover:text-red-500'
+                                        >
+                                            Delete
+                                        </button>
                                     </>
                                 )}
                         </div>
@@ -143,6 +143,7 @@ Comment.propTypes = {
     comment: PropTypes.string.isRequired,
     onLike: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
 }
 
 export default Comment;
