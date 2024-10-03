@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import CallToAction from "../Components/CallToAction";
 import CommentSection from "../Components/CommentSection";
+import PostCard from "../Components/PostCard";
 
 
 const PostPage = () => {
@@ -11,7 +12,7 @@ const PostPage = () => {
     const [loading, SetLoading] = useState(true);
     const [error, SetError] = useState(false);
     const [post, SetPost] = useState(null)
-    console.log(error)
+    const [recentPosts, setRecentPosts] = useState(null)
     useEffect(() => {
         const fetchPost = async () => {
 
@@ -37,6 +38,20 @@ const PostPage = () => {
         };
         fetchPost()
     }, [postSlug])
+    useEffect(() => {
+        try {
+            const fetchRecentPosts = async () => {
+                const res = await fetch(`http://localhost:3000/api/post/getposts?limit=3`);
+                const data = await res.json();
+                if (res.ok) {
+                    setRecentPosts(data.posts);
+                }
+            };
+            fetchRecentPosts();
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
     if (loading) return (
         <div className="flex justify-center items-center min-h-screen ">
             <Spinner size='xl' />
@@ -58,7 +73,7 @@ const PostPage = () => {
             <img
                 src={post && post.image}
                 alt={post && post.title}
-                className='mt-10 p-3 max-h-[600px] w-full object-cover'
+                className='mt-10 p-3 max-h-[600px] w-full object-cover rounded-2xl mb-5'
             />
             <div className='flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs'>
                 <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
@@ -77,14 +92,14 @@ const PostPage = () => {
 
             <div className='flex flex-col justify-center items-center mb-5'>
                 <h1 className='text-xl mt-5'>Recent articles</h1>
-                {/* <div className='flex flex-wrap gap-5 mt-5 justify-center'>
+                <div className='flex flex-wrap gap-5 mt-5 justify-center'>
                     {recentPosts &&
                         recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
-                </div> */}
+                </div>
             </div>
-            {/* {error && (
+            {error && (
                 <div>{error}</div>
-            )} */}
+            )}
         </main>
     );
 }
