@@ -140,7 +140,7 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     );
 }
 Comment.propTypes = {
-    comment: PropTypes.string.isRequired,
+    comment: PropTypes.object.isRequired,
     onLike: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { Sidebar } from "flowbite-react";
-import { HiDocumentText, HiOutlineUserGroup, HiTable, HiUser, } from "react-icons/hi";
+import { HiDocumentText, HiOutlineUserGroup, HiTable, HiUser, HiAnnotation, } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { HandelSignOut } from "../utlis/authUtlis";
@@ -58,6 +58,17 @@ const DashSidebar = () => {
                                 users
                             </Sidebar.Item>
 
+                        </Link>
+                    )}
+                    {userInfo.IsAdmin && (
+                        <Link to='/dashboard?tab=comments'>
+                            <Sidebar.Item
+                                active={tab === 'comments'}
+                                icon={HiAnnotation}
+                                as='div'
+                            >
+                                Comments
+                            </Sidebar.Item>
                         </Link>
                     )}
 

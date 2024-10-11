@@ -24,7 +24,7 @@ const PostCard = ({ post }) => {
     );
 }
 PostCard.propTypes = {
-    post: PropTypes.string.isRequired,
+    post: PropTypes.object.isRequired,
 
 }
 export default PostCard
