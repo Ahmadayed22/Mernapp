@@ -30,11 +30,14 @@ const DashSidebar = () => {
         <Sidebar className="w-full md:w-56">
             <Sidebar.Items>
                 <Sidebar.ItemGroup className="flex flex-col gap-1">
-                    <Link to="/dashboard?tab=dash">
-                        <Sidebar.Item href="#" active={tab === "dash"} icon={HiUser} labelColor="dark" as={"div"}>
-                            DashBoard
-                        </Sidebar.Item>
-                    </Link>
+                    {userInfo.IsAdmin && (
+                        <Link to="/dashboard?tab=dash">
+                            <Sidebar.Item href="#" active={tab === "dash"} icon={HiUser} labelColor="dark" as={"div"}>
+                                DashBoard
+                            </Sidebar.Item>
+                        </Link>
+                    )}
+
                     <Link to="/dashboard?tab=profile">
                         <Sidebar.Item href="#" active={tab === "profile"} icon={HiUser} label={userInfo.IsAdmin ? "Admin" : "User"} labelColor="dark" as={"div"}>
                             Users
