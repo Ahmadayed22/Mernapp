@@ -149,7 +149,7 @@ export default function DashComments() {
                         </h3>
                         <div className='flex justify-center gap-4'>
                             <Button color='failure' onClick={handleDeleteComment}>
-                                Yes, I'm sure
+                                Yes,I am sure
                             </Button>
                             <Button color='gray' onClick={() => setShowModal(false)}>
                                 No, cancel
