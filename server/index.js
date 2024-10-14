@@ -12,7 +12,8 @@ const cors = require("cors")
 const app = express()
 app.use(cors({
     origin: 'http://localhost:5173', // Frontend origin
-    credentials: true // Enable cookies and other credentials in CORS
+    credentials: true ,// Enable cookies and other credentials in CORS
+    // optionSuccessStatus: 200,
 }));
 app.use(cookieParser())
 app.use(express.json())
