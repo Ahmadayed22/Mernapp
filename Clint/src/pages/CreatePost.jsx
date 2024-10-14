@@ -44,6 +44,7 @@ export default function CreatePost() {
                 },
                 (error) => {
                     setImageUploadError('Image upload failed , the image size should less than 2MB');
+                    console.log(error)
                     setImageUploadProgress(null);
                 },
                 () => {

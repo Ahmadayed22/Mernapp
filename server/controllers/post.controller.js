@@ -76,28 +76,28 @@ const deletepost = async (req, res) => {
     }
 }
 
-
-const updatepost =async (req, res) => {
-    const { postId } = req.params;
-    const { title, content, category } = req.body;
-        if (!req.user.IsAdmin) {
+const updatepost = async (req, res) => {
+    if (!req.user.IsAdmin) {
         return res.status(401).json({ error: "You are not authorized to update this post" });
     }
     try {
-        
-        const updateFiels = { title, content, category };
-        if (title) {
-            updateFiels.slug = title.split(" ").join("-").toLowerCase().replace(/[^a-zA-Z0-9-]/g, "");
-        }
-        const updatedPost = await Post.findByIdAndUpdate(postId, updateFiels, { new: true })
-          if (!updatedPost) {
-            return res.status(404).json({ error: "Post not found" });
-        }
-
-        res.status(200).json(updatedPost);
-    } catch (error) {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (error) {
         res.status(400).json({ error: `Unable to update the post: ${error.message}` });
-    }
- 
-}
+  }
+
+};
+
 module.exports = {create,getposts,deletepost,updatepost}
