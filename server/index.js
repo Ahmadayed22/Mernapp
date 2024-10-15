@@ -26,7 +26,6 @@ app.use("/api/post", PostRouter);
 app.use("/api/comment", CommentRouter);
 
 // Use __dirname directly without re-declaration
-const path = require('path');
 
 app.use(express.static(path.join(__dirname, '../Clint/dist')));
 app.get('*', (req, res) => {
