@@ -6,15 +6,33 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { authActions } from '../store/auth';
 import { themeAction } from '../store/themeSlice';
 import { HandelSignOut } from '../utlis/authUtlis';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
     const navigate = useNavigate()
     const path = useLocation().pathname;
+    const location = useLocation();
     const { userInfo } = useSelector((state) => state.auth)
     const { theme } = useSelector((state) => state.theme)
     const dispatch = useDispatch()
-    // console.log(userInfo)
+    const navagit = useNavigate();
+    const [searchTerm, SetSearchTerm] = useState('')
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search)
+        const searchTemFromUrl = urlParams.get('searchTerm')
+        if (searchTemFromUrl)
+            SetSearchTerm(searchTemFromUrl)
+    }, [location.search])
+
+
+    const handelSubmit = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('searchTerm', searchTerm)
+        const searchQuery = urlParams.toString();
+        navagit(`/search?${searchQuery}`)
+    }
     const SingOut = () => {
         HandelSignOut(dispatch, navigate)
     }
@@ -29,12 +47,14 @@ export default function Header() {
                 </span>
                 Blog
             </Link>
-            <form>
+            <form onSubmit={handelSubmit}>
                 <TextInput
                     type='text'
                     placeholder='Search...'
                     rightIcon={AiOutlineSearch}
                     className='hidden lg:inline'
+                    value={searchTerm}
+                    onChange={(e) => SetSearchTerm(e.target.value)}
                 />
             </form>
             <Button className='w-12 h-10 lg:hidden' color='gray' pill>
