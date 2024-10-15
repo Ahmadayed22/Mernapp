@@ -34,7 +34,7 @@ app.get('*', (req, res) => {
 
 mongoose.connect(URL)
   .then(() => {
-    app.listen(Port, () => {
+    app.listen(Port || 3000, () => {
       console.log('we are listening on port', Port, '& Connecting to Db');
     });
   })
