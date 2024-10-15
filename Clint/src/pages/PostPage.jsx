@@ -18,7 +18,7 @@ const PostPage = () => {
         const fetchPost = async () => {
             try {
                 SetLoading(true);
-                const res = await fetch(`http://localhost:3000/api/post/getposts?slug=${postSlug}`);
+                const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -42,7 +42,7 @@ const PostPage = () => {
     useEffect(() => {
         try {
             const fetchRecentPosts = async () => {
-                const res = await fetch(`http://localhost:3000/api/post/getposts?limit=3`);
+                const res = await fetch(`/api/post/getposts?limit=3`);
                 const data = await res.json();
                 if (res.ok) {
                     setRecentPosts(data.posts);

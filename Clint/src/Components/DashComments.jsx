@@ -13,7 +13,7 @@ export default function DashComments() {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/api/comment/getcomments`, {
+                const res = await fetch(`/api/comment/getcomments`, {
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export default function DashComments() {
         const startIndex = comments.length;
         try {
             const res = await fetch(
-                `http://localhost:3000/api/comment/getcomments?startIndex=${startIndex}`, {
+                `/api/comment/getcomments?startIndex=${startIndex}`, {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default function DashComments() {
         setShowModal(false);
         try {
             const res = await fetch(
-                `http://localhost:3000/api/comment/deleteComment/${commentIdToDelete}`,
+                `/api/comment/deleteComment/${commentIdToDelete}`,
                 {
                     method: 'DELETE',
                     credentials: 'include',

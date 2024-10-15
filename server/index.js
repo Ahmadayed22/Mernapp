@@ -8,14 +8,14 @@ const CommentRouter = require("./routes/comment.route");
 const cookieParser = require("cookie-parser");
 const path = require('path');
 
-const cors = require("cors");
+// const cors = require("cors");
 
 const app = express();
 
-app.use(cors({
-    origin: 'http://localhost:5173', // Frontend origin
-    credentials: true, // Enable cookies and other credentials in CORS
-}));
+// app.use(cors({
+//     origin: 'http://localhost:5173', // Frontend origin
+//     credentials: true, // Enable cookies and other credentials in CORS
+// }));
 
 app.use(cookieParser());
 app.use(express.json());

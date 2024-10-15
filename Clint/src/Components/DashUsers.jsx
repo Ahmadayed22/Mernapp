@@ -14,7 +14,7 @@ const DashUsers = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/api/user/getusers`, {
+                const res = await fetch(`/api/user/getusers`, {
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const DashUsers = () => {
     const handleShowMore = async () => {
         const startIndex = users.length
         try {
-            const res = await fetch(`http://localhost:3000/api/user/getusers?startIndex=${startIndex}`, {
+            const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`, {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const DashUsers = () => {
 
     const HandelDelteUser = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/api/user/delete/${userIdToDelete}`, {
+            const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {

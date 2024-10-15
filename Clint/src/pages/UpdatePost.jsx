@@ -21,7 +21,7 @@ const UpdatePost = () => {
     useEffect(() => {
         const fetchPostData = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/api/post/getposts?postId=${postId}`);
+                const res = await fetch(`/api/post/getposts?postId=${postId}`);
                 const data = await res.json();
                 if (!res.ok) {
 
@@ -86,7 +86,7 @@ const UpdatePost = () => {
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/post/updatepost/${postId}/${userInfo._id}`, {
+            const res = await fetch(`/api/post/updatepost/${postId}/${userInfo._id}`, {
                 method: "PUT",
                 body: JSON.stringify(formData),
                 credentials: "include",

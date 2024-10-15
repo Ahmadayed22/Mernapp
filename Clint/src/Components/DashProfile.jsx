@@ -1,20 +1,14 @@
 import { Alert, Button, TextInput } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import {
-    getDownloadURL,
-    getStorage,
-    ref,
-    uploadBytesResumable,
-} from 'firebase/storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from './Firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { authActions } from '../store/auth';
-import { useDispatch } from 'react-redux';
 import ModalComponent from './ModalComponent';
 import { Link } from 'react-router-dom';
-// import { useNavigate } from "react-router-dom";
+
 export default function DashProfile() {
     const { userInfo, error, loading } = useSelector((state) => state.auth);
     const [imageFile, setImageFile] = useState(null);
@@ -25,10 +19,10 @@ export default function DashProfile() {
     const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
     const [updateUserError, setUpdateUserError] = useState(null);
     const [formData, setFormData] = useState({});
-    const [ShowModal, SetShowModal] = useState(false)
+    const [ShowModal, SetShowModal] = useState(false);
     const filePickerRef = useRef();
     const dispatch = useDispatch();
-    // const navigate = useNavigate()
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -36,45 +30,28 @@ export default function DashProfile() {
             setImageFileUrl(URL.createObjectURL(file));
         }
     };
+
     useEffect(() => {
-        if (imageFile) {
-            uploadImage();
-        }
+        if (imageFile) uploadImage();
     }, [imageFile]);
-    //Upload Image dose not work
+
     const uploadImage = async () => {
-        // service firebase.storage {
-        //   match /b/{bucket}/o {
-        //     match /{allPaths=**} {
-        //       allow read;
-        //       allow write: if
-        //       request.resource.size < 2 * 1024 * 1024 &&
-        //       request.resource.contentType.matches('image/.*')
-        //     }
-        //   }
-        // }
         setImageFileUploading(true);
         setImageFileUploadError(null);
         const storage = getStorage(app);
         const fileName = new Date().getTime() + imageFile.name;
         const storageRef = ref(storage, fileName);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
         uploadTask.on(
             'state_changed',
             (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setImageFileUploadProgress(progress.toFixed(0));
             },
             (error) => {
-                setImageFileUploadError(
-                    'Could not upload image (File must be less than 2MB)', error
-                );
-                setImageFileUploadProgress(null);
-                setImageFile(null);
-                setImageFileUrl(null);
-                setImageFileUploading(false);
+                setImageFileUploadError('File upload failed. Ensure it is under 2MB.');
+                resetImageState();
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -86,6 +63,13 @@ export default function DashProfile() {
         );
     };
 
+    const resetImageState = () => {
+        setImageFileUploadProgress(null);
+        setImageFile(null);
+        setImageFileUrl(null);
+        setImageFileUploading(false);
+    };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
@@ -94,83 +78,66 @@ export default function DashProfile() {
         e.preventDefault();
         setUpdateUserError(null);
         setUpdateUserSuccess(null);
+
         if (Object.keys(formData).length === 0) {
-            setUpdateUserError('No changes made');
+            setUpdateUserError('No changes made.');
             return;
         }
         if (imageFileUploading) {
-            setUpdateUserError('Please wait for image to upload');
+            setUpdateUserError('Wait for the image to finish uploading.');
             return;
         }
         try {
             dispatch(authActions.updateStart());
-            const res = await fetch(`http://localhost:3000/api/user/update/:${userInfo._id}`, {
+            const res = await fetch(`/api/user/update/${userInfo._id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
             const data = await res.json();
             if (!res.ok) {
                 dispatch(authActions.updateFailure(data.error));
-                setUpdateUserError(data.error);
+                setUpdateUserError(data.error || 'Update failed.');
             } else {
                 dispatch(authActions.updateSuccess(data));
-                setUpdateUserSuccess("User's profile updated successfully");
+                setUpdateUserSuccess("Profile updated successfully.");
             }
         } catch (error) {
-            dispatch(authActions.updateFailure(error.message));
             setUpdateUserError(error.message);
         }
     };
 
     const HandelDeleteUser = async () => {
-        SetShowModal(false)
+        SetShowModal(false);
         try {
-            dispatch(authActions.DeleteUserStart())
-            const response = await fetch(`http://localhost:3000/api/user/delete/:${userInfo._id}`, {
-                method: "DELETE",
+            dispatch(authActions.DeleteUserStart());
+            const res = await fetch(`/api/user/delete/${userInfo._id}`, {
+                method: 'DELETE',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            const data = await response.json()
-            if (!response.ok) {
-                dispatch(authActions.DeleteUserFailure(data.error))
-            }
-            else {
-                dispatch(authActions.DeleteUserSuccess(data))
-                console.log(data)
-            }
-        } catch (error) {
-            console.log(error.message, error)
-            dispatch(authActions.DeleteUserFailure(error))
-        }
-    }
-    //or you can use utlis
-    const HandelSignOut = async () => {
-        dispatch(authActions.SignOutStart())
-        try {
-            const res = await fetch("http://localhost:3000/api/user/signout", {
-                method: "POST",
-            })
-            const data = await res.json()
-            if (!res.ok) {
-                dispatch(authActions.SignOutFailure(data.error))
-                console.log(data.error)
-            }
-            else {
-                dispatch(authActions.SignOutSuccess())
+                headers: { 'Content-Type': 'application/json' },
+            });
 
-            }
+            const data = await res.json();
+            if (!res.ok) dispatch(authActions.DeleteUserFailure(data.error));
+            else dispatch(authActions.DeleteUserSuccess(data));
         } catch (error) {
-            dispatch(authActions.SignOutFailure(error))
-            console.log(error)
+            dispatch(authActions.DeleteUserFailure(error.message));
         }
-    }
+    };
+
+    const HandelSignOut = async () => {
+        dispatch(authActions.SignOutStart());
+        try {
+            const res = await fetch("/api/user/signout", { method: "POST" });
+            const data = await res.json();
+            if (!res.ok) dispatch(authActions.SignOutFailure(data.error));
+            else dispatch(authActions.SignOutSuccess());
+        } catch (error) {
+            dispatch(authActions.SignOutFailure(error.message));
+        }
+    };
+
     return (
         <div className='max-w-lg mx-auto p-3 w-full'>
             <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
@@ -188,62 +155,44 @@ export default function DashProfile() {
                 >
                     {imageFileUploadProgress && (
                         <CircularProgressbar
-                            value={imageFileUploadProgress || 0}
+                            value={imageFileUploadProgress}
                             text={`${imageFileUploadProgress}%`}
                             strokeWidth={5}
-                            styles={{
-                                root: {
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                },
-                                path: {
-                                    stroke: `rgba(62, 152, 199, ${imageFileUploadProgress / 100
-                                        })`,
-                                },
-                            }}
                         />
                     )}
                     <img
-                        src={imageFileUrl || userInfo.profilePicture}
+                        src={imageFileUrl || userInfo.profilePicture || ''}
                         alt='user'
-                        className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${imageFileUploadProgress &&
-                            imageFileUploadProgress < 100 &&
-                            'opacity-60'
-                            }`}
+                        className='rounded-full w-full h-full object-cover'
                     />
                 </div>
-                {imageFileUploadError && (
-                    <Alert color='failure'>{imageFileUploadError}</Alert>
-                )}
+                {imageFileUploadError && <Alert color='failure'>{imageFileUploadError}</Alert>}
                 <TextInput
                     type='text'
                     id='username'
-                    placeholder='username'
+                    placeholder='Username'
                     defaultValue={userInfo.username}
                     onChange={handleChange}
                 />
                 <TextInput
                     type='email'
                     id='email'
-                    placeholder='email'
+                    placeholder='Email'
                     defaultValue={userInfo.email}
                     onChange={handleChange}
                 />
                 <TextInput
                     type='password'
                     id='password'
-                    placeholder='password'
+                    placeholder='Password'
                     onChange={handleChange}
                 />
                 <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={loading}>
                     {loading ? "Loading" : "Update"}
                 </Button>
                 {userInfo.IsAdmin && (
-                    <Link to={"/create-post"}>
-                        <Button type='button' gradientMonochrome="cyan" outline className='w-full' >
+                    <Link to='/create-post'>
+                        <Button type='button' gradientMonochrome='cyan' outline>
                             Create Post
                         </Button>
                     </Link>
@@ -253,23 +202,14 @@ export default function DashProfile() {
                 <span onClick={() => SetShowModal(true)} className='cursor-pointer'>Delete Account</span>
                 <span onClick={HandelSignOut} className='cursor-pointer'>Sign Out</span>
             </div>
-            {updateUserSuccess && (
-                <Alert color='success' className='mt-5'>
-                    {updateUserSuccess}
-                </Alert>
-            )}
-            {updateUserError && (
-                <Alert color='failure' className='mt-5'>
-                    {updateUserError}
-                </Alert>
-            )}
-            {error && (
-                <Alert color='failure' className='mt-5'>
-                    {error}
-                </Alert>
-            )}
-            <ModalComponent SetShowModal={SetShowModal} ShowModal={ShowModal} HandelDeleteUser={HandelDeleteUser} />
+            {updateUserSuccess && <Alert color='success'>{updateUserSuccess}</Alert>}
+            {updateUserError && <Alert color='failure'>{updateUserError}</Alert>}
+            {error && <Alert color='failure'>{error.message || error}</Alert>}
+            <ModalComponent
+                SetShowModal={SetShowModal}
+                ShowModal={ShowModal}
+                HandelDeleteUser={HandelDeleteUser}
+            />
         </div>
     );
-
 }
