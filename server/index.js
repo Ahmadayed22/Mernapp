@@ -7,8 +7,7 @@ const PostRouter = require("./routes/Post.route");
 const CommentRouter = require("./routes/comment.route");
 const cookieParser = require("cookie-parser");
 const path = require('path');
-const URL = process.env.MONGO_URL;
-const Port = process.env.PORT;
+
 const cors = require("cors");
 
 const app = express();
@@ -32,10 +31,11 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'Clint', 'dist', 'index.html'));
 });
 
-mongoose.connect(URL)
+
+mongoose.connect(process.env.MONGO_URL)
   .then(() => {
-    app.listen(Port || 3000, () => {
-      console.log('we are listening on port', Port, '& Connecting to Db');
+    app.listen( 3000 || process.env.PORT , () => {
+      console.log('we are listening on port', process.env.PORT, '& Connecting to Db');
     });
   })
   .catch((err) => {
