@@ -5,13 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon api/index.js",
-    "start": "nodemon api/index.js",
-    "build": "npm install && npm install --prefix Clint && npm run build --prefix Clint"
+    "dev": "nodemon api/index.js", 
+    "start": "node api/index.js",
+    "build": "npm install && npm run build --prefix Clint" 
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
@@ -21,7 +18,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.4",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "redux-persist": "^6.0.0",
     "validator": "^13.12.0"
   }
