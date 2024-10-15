@@ -192,7 +192,7 @@ export default function DashProfile() {
                 </Button>
                 {userInfo.IsAdmin && (
                     <Link to='/create-post'>
-                        <Button type='button' gradientMonochrome='cyan' outline>
+                        <Button type='button' gradientMonochrome='cyan' outline className='w-full'>
                             Create Post
                         </Button>
                     </Link>
