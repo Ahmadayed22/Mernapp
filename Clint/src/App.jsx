@@ -13,6 +13,8 @@ import UpdatePost from "./pages/UpdatePost"
 import PostPage from "./pages/PostPage"
 import ScrollToTop from "./Components/ScrollToTop"
 import Search from "./pages/Search"
+import FooterCom from "./Components/FooterCom"
+
 // import Header from './components/Header'
 function App() {
   return (
@@ -35,6 +37,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
       </Routes>
+      <FooterCom />
     </Router>
   )
 }
