@@ -1,5 +1,5 @@
-const express = require("express");
 require("dotenv").config();
+const express = require("express");
 const mongoose = require('mongoose');
 const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
@@ -26,10 +26,13 @@ app.use("/api/post", PostRouter);
 app.use("/api/comment", CommentRouter);
 
 // Use __dirname directly without re-declaration
-app.use(express.static(path.join(__dirname, 'Clint', 'dist')));
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, '../Clint/dist')));
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Clint', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../Clint/dist', 'index.html'));
 });
+
 
 
 mongoose.connect(process.env.MONGO_URL)
